@@ -78,7 +78,9 @@ sudo git clone https://github.com/Dewalt-arch/pimpmykali
 cd pimpmykali
 sudo ./pimpmykali.sh
 ```
-![alt text for the image](images/Screenshot%202026-02-27%20022122.png)
+![alt text for the image](images/Screenshot%202026-02-27%20022234.png)
+![](images/Screenshot%202026-02-27%20022316.png)
+![](images/Screenshot%202026-02-27%20022436.png) ![](images/Screenshot%202026-02-27%20024719.png)
 
 I accepted the default prompts and allowed the script to configure everything automatically.
 
@@ -91,7 +93,7 @@ This saved time and ensured my penetration testing environment was fully prepare
 ```bash
 sudo apt install docker.io docker-compose
 ```
-
+![](images/Screenshot%202026-02-27%20025310.png)
 After installation, I restarted the VM to ensure all services were running correctly.
 
 ---
@@ -105,7 +107,8 @@ unzip bugbounty.zip
 cd bugbounty
 sudo docker-compose up
 ```
-
+![](images/Screenshot%202026-02-27%20025700.png)
+![](images/Screenshot%202026-02-27%20025940.png)
 This pulled the necessary images and built the vulnerable lab.
 
 In another terminal:
@@ -114,6 +117,9 @@ In another terminal:
 ./set-permissions.sh
 ```
 
+![](images/Screenshot%202026-02-27%20030431.png)
+![](images/Screenshot%202026-02-27%20031259.png)
+
 This step was important for file upload labs.
 
 Accessed lab at:
@@ -121,7 +127,8 @@ Accessed lab at:
 ```
 http://localhost
 ```
-
+![](images/Screenshot%202026-02-27%20030828.png)
+![](images/Screenshot%202026-02-27%20030848.png)
 If needed, database reset:
 
 ```
@@ -144,6 +151,8 @@ Before attacking, I learned the difference between:
 ## 🔓 Lab 0x01 – Brute Force
 
 Target account: Jeremy
+![](images/Screenshot%202026-03-02%20110555.png)
+![](images/Screenshot%202026-03-02%20110609.png)
 
 ### Using Burp Suite
 
@@ -154,6 +163,7 @@ Target account: Jeremy
 5. Analyzed response length differences.
 
 Found valid password: **letmein**
+![](images/Screenshot%202026-03-02%20112852.png)
 
 ---
 
@@ -166,7 +176,7 @@ ffuf -request lab.txt -request-proto http \
 -w /usr/share/seclists/Passwords/Common-Credentials/xato-net-10-million-passwords-1000.txt \
 -fs 1814
 ```
-
+![](images/Screenshot%202026-03-02%20112829.png)
 Filtered by response size to detect anomalies.
 
 Successfully identified valid credentials.
@@ -176,7 +186,10 @@ Successfully identified valid credentials.
 ## 🔐 Lab 0x02 – MFA Logic Flaw
 
 Target: Jessamy / pasta
-
+![](images/Screenshot%202026-03-02%20113005.png)
+![](images/Screenshot%202026-03-02%20113103.png)
+![](images/Screenshot%202026-03-02%20113122.png)
+![](images/Screenshot%202026-03-02%20113145.png)
 After entering correct credentials, the system requested an MFA code.
 
 Observations:
@@ -191,6 +204,7 @@ Observations:
 3. Forwarded request.
 
 Successfully logged in as another user.
+![](images/Screenshot%202026-03-02%20113742.png)
 
 ### Vulnerability Type:
 
@@ -205,6 +219,7 @@ The system failed to bind MFA verification to the original authenticated session
 The application locked accounts after 5 failed attempts.
 
 Instead of brute forcing one user:
+![](images/Screenshot%202026-03-02%20113820.png)
 
 ### Strategy:
 
@@ -237,7 +252,7 @@ URL contained:
 ```
 ?account=1001
 ```
-
+![](images/Screenshot%202026-03-02%20161728.png)
 ### Exploit
 
 1. Sent request to Repeater.
@@ -258,9 +273,9 @@ Discovered multiple admin accounts.
 ffuf -u http://localhost/labs/e0x02.php?account=FUZZ \
 -w num.txt -mr "admin"
 ```
-
+![](images/Screenshot%202026-03-02%20163313.png)
 Found valid admin IDs.
-
+![](images/Screenshot%202026-03-02%20163409.png)
 Vulnerability: **Insecure Direct Object Reference (IDOR)**
 (API equivalent: Broken Object Level Authorization)
 
@@ -275,8 +290,10 @@ APIs made up most of the lab traffic.
 ## API 0x01 – JWT Analysis
 
 Logged in via API endpoint.
+![](images/Screenshot%202026-03-02%20173136.png)
 
 Received JWT token.
+![](images/Screenshot%202026-03-02%20180715.png)
 
 Noticed:
 
@@ -297,10 +314,13 @@ Steps:
 3. Updated Jeremy’s bio (expected behavior).
 4. Used Jeremy’s token to update Jessamy’s bio.
 5. Request succeeded.
+![](images/Screenshot%202026-03-03%20103625.png)
+![](images/Screenshot%202026-03-03%20104133.png)
 
 Confirmed broken authorization.
 
 Jeremy should not be able to modify Jessamy’s data.
+![](images/Screenshot%202026-03-03%20104455.png)
 
 ---
 
@@ -325,7 +345,8 @@ Tested:
 ```
 ../../../../etc/passwd
 ```
-
+![](images/Screenshot%202026-03-03%20111017.png)
+![](images/Screenshot%202026-03-03%20111514.png)
 Successfully retrieved system file.
 
 ---
@@ -333,6 +354,7 @@ Successfully retrieved system file.
 ## File Inclusion 0x02 – Filter Bypass + RFI
 
 Initial traversal blocked.
+![](images/Screenshot%202026-03-03%20111837.png)
 
 Bypass technique used:
 
@@ -347,7 +369,7 @@ Also tested:
 ```
 https://www.google.com
 ```
-
+![](images/Screenshot%202026-03-03%20111928.png)
 Confirmed Remote File Inclusion capability.
 
 ---
@@ -359,16 +381,18 @@ Used:
 ```
 php://filter/convert.base64-encode/resource=db.php
 ```
-
+![](images/Screenshot%202026-03-03%20112129.png)
 Decoded response in Burp.
+![](images/Screenshot%202026-03-03%20112213.png)
 
 Extracted database credentials.
 
 ---
 
 ## API-Based LFI (0x03)
-
+![](images/Screenshot%202026-03-03%20112304.png)
 Saved API request.
+![](images/Screenshot%202026-03-03%20113018.png)
 
 Fuzzed with ffuf:
 
@@ -376,7 +400,8 @@ Fuzzed with ffuf:
 ffuf -request api-req.txt -request-proto http \
 -w /usr/share/seclists/Fuzzing/LFI/LFI-Jhaddix.txt
 ```
-
+![](images/Screenshot%202026-03-03%20113219.png)
+![](images/Screenshot%202026-03-03%20114405.png)
 Filtered by word count and response size.
 
 Identified working payload.
