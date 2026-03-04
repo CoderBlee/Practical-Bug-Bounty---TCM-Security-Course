@@ -65,6 +65,8 @@ I performed all labs locally in a Kali Linux virtual machine.
 
 Repository:
 https://github.com/Dewalt-arch/pimpmykali
+![alt text for the image](images/Screenshot%202026-02-27%20022122.png)
+
 
 PimpMyKali automates post-install configuration of Kali Linux.
 
@@ -76,6 +78,7 @@ sudo git clone https://github.com/Dewalt-arch/pimpmykali
 cd pimpmykali
 sudo ./pimpmykali.sh
 ```
+![alt text for the image](images/Screenshot%202026-02-27%20022122.png)
 
 I accepted the default prompts and allowed the script to configure everything automatically.
 
