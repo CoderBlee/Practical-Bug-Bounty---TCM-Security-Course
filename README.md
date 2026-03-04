@@ -408,6 +408,9 @@ Identified working payload.
 
 Confirmed LFI via API endpoint.
 
+
+---
+# NB! Check out more images on the images folder, if you get stuck.
 ---
 
 # 🧠 What I Learned
